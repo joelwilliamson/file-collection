@@ -7,7 +7,7 @@
 -- directory:System.Directory, but take an extra leading parameter denoting
 -- the root to work from
 
-module Archive.FileCollection
+module Codec.Archive.FileCollection
        (
        ) where
 
