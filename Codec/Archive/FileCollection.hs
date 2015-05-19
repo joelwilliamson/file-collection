@@ -1,14 +1,20 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE UnicodeSyntax #-}
--- This module represents an abstraction of a file tree. The motivating use case
--- is abstracting the difference between a real file system tree, rooted in some
--- directory, and the contents of a zip archive. Where possible, the methods
--- associated with a FileCollection mimic those provided by
--- directory:System.Directory, but take an extra leading parameter denoting
--- the root to work from
 
+-------------------------------------------------------------------------------
+-- |
+-- Module       :       Codec.Archive.FileCollection
+-- Copyright    :       (c) Joel Williamson 2015
+-- License      :       BSD 3-clause
+-- Maintainer   :       joel.s.williamson@gmail.com
+-- Stability    :       Testing
+-- 
+-- A uniform interface over file archives and directories
+--
+-------------------------------------------------------------------------------
 module Codec.Archive.FileCollection
        (
+         FileCollection(..)
        ) where
 
 import qualified System.Directory as SD
@@ -16,21 +22,54 @@ import Codec.Archive.Zip
 import Data.Monoid((<>))
 import qualified Data.List as L
 import Data.Maybe(mapMaybe,listToMaybe)
+{- $intro
+This module represents an abstraction of a file tree. The motivating use case
+is abstracting the difference between a real file system tree, rooted in some
+directory, and the contents of a zip archive. Where possible, the methods
+associated with a FileCollection mimic those provided by
+directory:System.Directory, but take an extra leading parameter denoting
+the root to work from
+-}
 
+-- | @class FileCollection d where@ An object that is a heirarchical arrangement
+-- | of files. This could be a tree in the file system, or a file archive.
 class FileCollection d where
+  -- | @'createDirectory' root path@ creates a new directory /root\/path/ which
+  -- | is initially empty. The path to the new directory is returned.
   createDirectory :: d → FilePath → IO d
+  -- | @'createDirectoryIfMissing' root path@ creates a new directory /root\/path/
+  -- | if it doesn't exist. It also creates any missing ancestors of @path@
   createDirectoryIfMissing :: d → FilePath → IO d
+  -- | @'removeDirectory' root dir@ removes an existing directory /dir/.
   removeDirectory :: d → FilePath → IO d
+  -- | @'removeDirectoryRecursive' root dir@ removes a directory /dir/ and all
+  -- | its contents and subdirectories.
   removeDirectoryRecursive :: d → FilePath → IO d
+  -- | @'renameDirectory' root source target@ changes the name of an existing
+  -- | directory from /source/ to /target/. If the /target/ directory already
+  -- | exists, it can be removed or merged with the /source/ directory.
   renameDirectory :: d → FilePath → FilePath → IO d
+  -- | @'getDirectoryContents' root dir@ returns a list of all entries
+  -- | immediately contained in /dir/.
   getDirectoryContents :: d → FilePath → IO [FilePath]
+  -- | @'removeFile' root file@ removes the directory entry for an existing file,
+  -- | where /file/ is not a directory.
   removeFile :: d → FilePath → IO d
+  -- | @'renameFile' root old new@ changes the name of an existing file from /old/
+  -- | to /new/. If the /new/ object already exists, it is replaced by /old/.
   renameFile :: d → FilePath → FilePath → IO d
+  -- | @'copyFile' root old new@ creates a duplicate of /old/ with the name /new/.
   copyFile :: d → FilePath → FilePath → IO d
   -- These don't work recursively
+  -- | @'findFile' root dirs file@ returns the path of /file/ if it can be found
+  -- | in any of /dirs/.
   findFile :: d → [FilePath] → String → IO (Maybe FilePath)
   findFiles :: d → [FilePath] → String → IO [FilePath]
+  -- | @'doesFileExist' root path@ returns True if /path/ exists and is not a
+  -- | directory.
   doesFileExist :: d → FilePath → IO Bool
+  -- | @'doesDirectoryExist' root path@ returns True if /path exists and is a
+  -- | directory.
   doesDirectoryExist :: d → FilePath → IO Bool
 
 
