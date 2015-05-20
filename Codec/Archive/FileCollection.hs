@@ -39,16 +39,19 @@ the root to work from
 -}
 
 class File f where
+  fileName :: f → String
   readFile :: f → IO BS.ByteString
   writeFile :: f → BS.ByteString → IO f
   appendFile :: f → BS.ByteString → IO f
 
 instance File FilePath where
+  fileName = id
   readFile f = BS.readFile f
   writeFile f c = BS.writeFile f c >> return f
   appendFile f c = BS.appendFile f c >> return f
 
 instance File Entry where
+  fileName = eRelativePath
   readFile = return . fromEntry
   writeFile e newContents = do
     now <- fromIntegral <$> sec <$> getTime Realtime
