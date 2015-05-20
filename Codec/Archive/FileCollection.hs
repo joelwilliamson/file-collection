@@ -16,7 +16,8 @@
 -------------------------------------------------------------------------------
 module Codec.Archive.FileCollection
        (
-         FileCollection(..)
+         FileCollection(..),
+         File(..)
        ) where
 
 import qualified System.Directory as SD
