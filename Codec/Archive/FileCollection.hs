@@ -136,7 +136,7 @@ instance FileCollection [Char] where
   removeDirectory = combineRunReturn SD.removeDirectory
   removeDirectoryRecursive = combineRunReturn SD.removeDirectoryRecursive
   renameDirectory = combineRunReturn2 SD.renameDirectory
-  getDirectoryContents root rel = map (combine root) <$> (SD.getDirectoryContents $ combine root rel)
+  getDirectoryContents root rel = map (combine root . combine rel) <$> (SD.getDirectoryContents $ combine root rel)
   getFile root f = combine root f
   removeFile = combineRunReturn SD.removeFile
   renameFile = combineRunReturn2 SD.renameFile
