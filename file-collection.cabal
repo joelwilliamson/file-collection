@@ -1,5 +1,5 @@
 name:                file-collection
-version:             0.1.1.4
+version:             0.1.1.5
 synopsis:            Provide a uniform interface over file archives and directories
 description:         The interface is essentially the same as that provided by
                      `directory`, except each function also take reference to the
