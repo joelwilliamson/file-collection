@@ -1,5 +1,9 @@
 name:                file-collection
+<<<<<<< HEAD
 version:             0.1.1.5
+=======
+version:             0.1.1.3
+>>>>>>> parent of a9dd735... Return absolute paths for directory contents
 synopsis:            Provide a uniform interface over file archives and directories
 description:         The interface is essentially the same as that provided by
                      `directory`, except each function also take reference to the
